@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini-ERP - Operations</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header><div class="inner">
+  <span class="brand">Mini-ERP</span>
+  <nav><a href="/">Customer</a><a href="/ops" class="active">Operations</a></nav>
+</div></header>
+<main>
+  <h1>Operations</h1>
+  <p class="sub">Panel for setting up the scenario: the big customer in the database and month-end.</p>
+
+  <div class="two">
+    <section class="card">
+      <b>Whale customer</b>
+      <div class="msg" id="whale-state">-</div>
+      <div class="row" style="margin-top:12px">
+        <button class="ghost" id="whale-remove">Remove whale</button>
+        <button id="whale-add">Add whale</button>
+      </div>
+      <p class="msg" id="whale-msg"></p>
+    </section>
+
+    <section class="card">
+      <b>Month-end</b>
+      <div class="msg" id="sim-state">-</div>
+      <div class="row" style="margin-top:12px">
+        <button id="sim-toggle">Simulate month-end</button>
+      </div>
+      <p class="msg">The whale's finance team runs monthly reports all at once.</p>
+    </section>
+  </div>
+</main>
+<script src="/static/ops.js"></script>
+</body>
+</html>
