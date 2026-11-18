@@ -1,0 +1,47 @@
+{
+  "label": "after-dedicated-db",
+  "args": {
+    "base_url": "http://localhost:8000",
+    "duration": 20,
+    "small_workers": 10,
+    "whale_workers": 8,
+    "small_tenants": 300,
+    "label": "after-dedicated-db"
+  },
+  "small_only": {
+    "small": {
+      "requests": 5343,
+      "rps": 267.1,
+      "errors": 0,
+      "p50_ms": 5.5,
+      "p95_ms": 13.3,
+      "p99_ms": 27.6
+    },
+    "whale": {
+      "requests": 0,
+      "rps": 0.0,
+      "errors": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null
+    }
+  },
+  "with_whale": {
+    "small": {
+      "requests": 3907,
+      "rps": 195.3,
+      "errors": 0,
+      "p50_ms": 15.7,
+      "p95_ms": 47.0,
+      "p99_ms": 70.5
+    },
+    "whale": {
+      "requests": 333,
+      "rps": 16.6,
+      "errors": 0,
+      "p50_ms": 503.9,
+      "p95_ms": 762.2,
+      "p99_ms": 882.0
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "label": "before-shared-db",
+  "args": {
+    "base_url": "http://localhost:8000",
+    "duration": 20,
+    "small_workers": 10,
+    "whale_workers": 8,
+    "small_tenants": 300,
+    "label": "before-shared-db"
+  },
+  "small_only": {
+    "small": {
+      "requests": 5020,
+      "rps": 251.0,
+      "errors": 0,
+      "p50_ms": 5.8,
+      "p95_ms": 14.4,
+      "p99_ms": 27.7
+    },
+    "whale": {
+      "requests": 0,
+      "rps": 0.0,
+      "errors": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null
+    }
+  },
+  "with_whale": {
+    "small": {
+      "requests": 3543,
+      "rps": 177.2,
+      "errors": 0,
+      "p50_ms": 21.4,
+      "p95_ms": 53.2,
+      "p99_ms": 67.3
+    },
+    "whale": {
+      "requests": 252,
+      "rps": 12.6,
+      "errors": 0,
+      "p50_ms": 688.4,
+      "p95_ms": 1176.1,
+      "p99_ms": 1371.4
+    }
+  }
+}
