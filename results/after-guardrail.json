@@ -1,0 +1,47 @@
+{
+  "label": "after-guardrail",
+  "args": {
+    "base_url": "http://localhost:8000",
+    "duration": 20,
+    "small_workers": 10,
+    "whale_workers": 8,
+    "small_tenants": 300,
+    "label": "after-guardrail"
+  },
+  "small_only": {
+    "small": {
+      "requests": 5027,
+      "rps": 251.3,
+      "errors": 0,
+      "p50_ms": 6.1,
+      "p95_ms": 15.6,
+      "p99_ms": 32.8
+    },
+    "whale": {
+      "requests": 0,
+      "rps": 0.0,
+      "errors": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "p99_ms": null
+    }
+  },
+  "with_whale": {
+    "small": {
+      "requests": 4917,
+      "rps": 245.8,
+      "errors": 0,
+      "p50_ms": 7.6,
+      "p95_ms": 19.7,
+      "p99_ms": 34.1
+    },
+    "whale": {
+      "requests": 159,
+      "rps": 8.0,
+      "errors": 0,
+      "p50_ms": 990.3,
+      "p95_ms": 2446.9,
+      "p99_ms": 2763.2
+    }
+  }
+}

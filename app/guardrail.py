@@ -1,15 +1,16 @@
 """Per-tenant metrics and the guardrail hook.
 
 SPIKE HOOK #2 - protect small tenants.
-`check()` runs before every tenant endpoint. Today it only lets everything
-through. Implement your guardrail here (rate limit, concurrency cap per
-tenant, separate "heavy report" budget, ...).
+`check()` runs before every tenant endpoint. Our guardrail: a separate
+"heavy report" budget per tenant (see REPORT_BUDGET below).
 """
+import asyncio
+import os
 import re
 import threading
 from collections import defaultdict, deque
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 
 WHALE_ID = 1
 _PATH = re.compile(r"^/t/(\d+)/")
@@ -28,15 +29,33 @@ def record(tenant_id: int, ms: float, status: int) -> None:
         _lat[tenant_id].append((ms, status))
 
 
-def check(tenant_id: int) -> int:
-    """FastAPI dependency. Raise HTTPException(429) to throttle a tenant.
+# Heavy-report budget: how many month-end reports ONE tenant may run at the same time.
+# Light work (listing and creating orders) is never limited.
+REPORT_BUDGET = int(os.getenv("REPORT_BUDGET", "1"))
+REPORT_WAIT_S = float(os.getenv("REPORT_WAIT_S", "30"))  # how long an extra report may wait in line
+_budgets: dict[int, asyncio.Semaphore] = {}
 
-    Example idea (not implemented): keep an in-memory counter of in-flight
-    heavy requests per tenant and reject above a limit.
+
+async def check(tenant_id: int, request: Request):
+    """FastAPI dependency: protect small tenants from one tenant's heavy reports.
+
+    A tenant may run at most REPORT_BUDGET monthly reports at once. Extra reports
+    wait in line (up to REPORT_WAIT_S seconds, then HTTP 429). Waiting happens
+    without holding a server thread or a database connection, so one tenant's
+    month-end cannot use up the capacity that other tenants need.
     """
-    # if too_many_in_flight(tenant_id):
-    #     raise HTTPException(status_code=429, detail="tenant over its budget")
-    return tenant_id
+    if not request.url.path.endswith("/reports/monthly"):
+        yield tenant_id
+        return
+    budget = _budgets.setdefault(tenant_id, asyncio.Semaphore(REPORT_BUDGET))
+    try:
+        await asyncio.wait_for(budget.acquire(), timeout=REPORT_WAIT_S)
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=429, detail="report budget reached, try again later")
+    try:
+        yield tenant_id
+    finally:
+        budget.release()
 
 
 def _pct(values: list[float], p: float) -> float | None:
